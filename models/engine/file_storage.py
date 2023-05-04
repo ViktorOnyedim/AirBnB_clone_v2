@@ -9,13 +9,14 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a the list of objects of one type of class in storage"""
+        """Returns a dictionary of objects optionally filetered by class in storage"""
         if cls is None:
-            return list(FileStorage.__objects.values())
-        else:
-            for obj in FileStorage.__objects.values():
-                if type(obj) == cls:
-                    return obj
+            return self.__objects
+
+        if isinstance(cls, str):
+            return {k: v for k, v in self.__objects.items() if v.__class__.__name__ == cls}
+            
+        return {k: v for k, v in self.__objects.items() if v.__class__ is cls}
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -50,7 +51,8 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                        self.all()[key] = classes[val['__class__']](**val)
+                    #self.all()[key] = classes[val['__class__']](**val)
+                    self.__objects[key] = classes[val["__class__"]](**val)
         except FileNotFoundError:
             pass
 
@@ -60,4 +62,5 @@ class FileStorage:
             if obj == None, do nothing
         """
         if obj is not None and obj in self.__objects:
-            del self.__objects[obj]
+            key = f"{obj.__class__.__name__}.{obj.id}"
+            del self.__objects[key]
