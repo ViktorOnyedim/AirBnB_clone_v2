@@ -62,5 +62,5 @@ class FileStorage:
             if obj == None, do nothing
         """
         if obj is not None and obj in self.__objects:
-            key = f"{obj.__class__.__name__}.{obj.id}"
+            key = "{}.{}".format(obj.__class__.__name__, obj.id)
             del self.__objects[key]
