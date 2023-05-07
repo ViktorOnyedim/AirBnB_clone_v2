@@ -18,7 +18,7 @@ class BaseModel:
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        """Instatntiates a new model"""
+        """Instantiates a new model"""
 
         if not kwargs:
             self.id = str(uuid.uuid4())
@@ -31,8 +31,7 @@ class BaseModel:
                 setattr(self, key, value)
                 if key == 'created_at' or key == 'updated_at':
                     if type(value) is str:   
-                        setattr(self, key, datetime.strptime(value, time_frmt)
-            #self.__dict__.update(kwargs)
+                        setattr(self, key, datetime.strptime(value, time_frmt))
 
     def __str__(self):
         """Returns a string representation of the instance"""
